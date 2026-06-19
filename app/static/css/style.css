@@ -55,29 +55,41 @@ body {
     overflow: hidden;
 }
 
-.landing-lang-switcher {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+.landing-chrome {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
 }
 
-.landing-lang-switcher a {
-    color: rgba(255, 255, 255, 0.72);
-    transition: color 0.3s ease;
+.landing-chrome > * {
+    pointer-events: auto;
 }
 
-.landing-lang-switcher a.active,
-.landing-lang-switcher a:hover {
-    color: #ffffff;
+.landing-chrome .logo {
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-.landing-lang-switcher .lang-divider {
-    color: rgba(255, 255, 255, 0.4);
+.landing-chrome .top-nav-global a {
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.landing-chrome .lang-switcher-inline a {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.landing-chrome .lang-switcher-inline a.active {
+    color: white;
+}
+
+.landing-chrome .lang-switcher-inline a:hover {
+    color: white;
+}
+
+.landing-chrome .lang-switcher-inline .lang-divider {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .landing-main {

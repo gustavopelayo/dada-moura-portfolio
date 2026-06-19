@@ -314,10 +314,11 @@ async def admin_logout():
 async def admin_dashboard(request: Request, db: Session = Depends(get_db), _admin: User = Depends(get_admin_user)):
     site_settings = get_site_settings()
     portfolios = crud_portfolio.get_portfolios(db, skip=0, limit=100)
+    featured_count = sum(1 for p in portfolios if p.is_featured)
     return templates.TemplateResponse(
         request=request, 
         name="admin/dashboard.html", 
-        context={"request": request, "projects": portfolios, "settings": site_settings}
+        context={"request": request, "projects": portfolios, "settings": site_settings, "featured_count": featured_count}
     )
 
 @app.get("/admin/projects/create", response_class=HTMLResponse)
@@ -407,6 +408,10 @@ async def delete_project(portfolio_id: int, db: Session = Depends(get_db), _admi
 async def toggle_featured(portfolio_id: int, db: Session = Depends(get_db), _admin: User = Depends(get_admin_user)):
     portfolio = crud_portfolio.get_portfolio(db, portfolio_id=portfolio_id)
     if portfolio:
+        if not portfolio.is_featured:
+            current_featured = crud_portfolio.get_featured_portfolios(db, limit=3)
+            if len(current_featured) >= 3:
+                return RedirectResponse(url="/admin/dashboard", status_code=302)
         from app.schemas.portfolio import PortfolioUpdate
         crud_portfolio.update_portfolio(db, portfolio_id, PortfolioUpdate(is_featured=not portfolio.is_featured))
     return RedirectResponse(url="/admin/dashboard", status_code=302)

@@ -5,22 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ settings.get('site_name', 'Daniel Moura') }}</title>
     <link rel="icon" type="image/png" href="{{ settings.get('logo_path', '/static/logo.png') }}">
-    <link rel="stylesheet" href="/static/css/style.css?v=20">
+    <link rel="stylesheet" href="/static/css/style.css?v=21">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="landing-page">
     <div class="landing-shell">
-        <div class="landing-lang-switcher">
-            {% set current_lang = lang | default('pt') %}
-            {% if current_lang == 'pt' %}
-                <a href="{{ request.url.path }}?lang=pt" onclick="document.cookie='language=pt; max-age=31536000; path=/; samesite=lax'" class="active">PT</a>
-                <span class="lang-divider">|</span>
-                <a href="{{ request.url.path }}?lang=en" onclick="document.cookie='language=en; max-age=31536000; path=/; samesite=lax'">EN</a>
-            {% else %}
-                <a href="{{ request.url.path }}?lang=pt" onclick="document.cookie='language=pt; max-age=31536000; path=/; samesite=lax'">PT</a>
-                <span class="lang-divider">|</span>
-                <a href="{{ request.url.path }}?lang=en" onclick="document.cookie='language=en; max-age=31536000; path=/; samesite=lax'" class="active">EN</a>
-            {% endif %}
+        <div class="site-chrome landing-chrome">
+            <div class="logo-center">
+                <a href="/" class="logo">
+                    <img src="{{ settings.get('logo_path', '/static/logo.png') }}" alt="" class="logo-icon">
+                    {{ settings.get('site_name', 'Daniel Moura') }}
+                </a>
+            </div>
+
+            <div class="top-nav-global">
+                <a href="/portfolio">{{ t('nav.portfolio', lang | default('pt')) }}</a>
+                <a href="/contact">{{ t('nav.contact', lang | default('pt')) }}</a>
+                <div class="lang-switcher-inline">
+                    {% set current_lang = lang | default('pt') %}
+                    {% if current_lang == 'pt' %}
+                        <a href="{{ request.url.path }}?lang=pt" onclick="document.cookie='language=pt; max-age=31536000; path=/; samesite=lax'" class="active">PT</a>
+                        <span class="lang-divider">|</span>
+                        <a href="{{ request.url.path }}?lang=en" onclick="document.cookie='language=en; max-age=31536000; path=/; samesite=lax'">EN</a>
+                    {% else %}
+                        <a href="{{ request.url.path }}?lang=pt" onclick="document.cookie='language=pt; max-age=31536000; path=/; samesite=lax'">PT</a>
+                        <span class="lang-divider">|</span>
+                        <a href="{{ request.url.path }}?lang=en" onclick="document.cookie='language=en; max-age=31536000; path=/; samesite=lax'" class="active">EN</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
         <div class="landing-canvas-wrap" aria-hidden="true">
@@ -37,8 +50,6 @@
         {% endif %}
 
         <main class="landing-main">
-            <p class="landing-label">{{ settings.get('site_name', 'Daniel Moura') }}</p>
-            <h1>{{ settings.get('site_name', 'Daniel Moura') }}</h1>
             <a href="/home{% if lang %}?lang={{ lang }}{% endif %}" class="landing-button">{{ t('landing.learn_more', lang | default('pt')) }}</a>
         </main>
     </div>
