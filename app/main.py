@@ -64,6 +64,60 @@ async def set_language(lang: str, response: Response, redirect_to: str = "/"):
 
 # Frontend routes
 @app.get("/", response_class=HTMLResponse)
+async def landing_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    lang: Optional[str] = Query(default=None),
+    language: Optional[str] = Cookie(default="pt")
+):
+    from app.models.image import PortfolioImage
+
+    def repeat_to_six(urls: list[str]) -> list[str]:
+        if not urls:
+            return []
+
+        repeated = []
+        while len(repeated) < 6:
+            repeated.extend(urls)
+        return repeated[:6]
+
+    selected_lang = validate_language(lang) if lang else validate_language(language)
+    site_settings = get_site_settings()
+    featured = crud_portfolio.get_featured_portfolios(db, limit=3)
+
+    cube_projects = []
+
+    def append_cube_project(project) -> bool:
+        image_urls = [
+            img.image_url
+            for img in db.query(PortfolioImage)
+            .filter(PortfolioImage.portfolio_id == project.id)
+            .order_by(PortfolioImage.is_cover.desc(), PortfolioImage.id)
+            .all()
+        ]
+        if image_urls:
+            cube_projects.append({
+                "id": project.id,
+                "name": get_translated_field(project, "name", selected_lang) or project.name,
+                "images": repeat_to_six(image_urls),
+            })
+            return True
+
+        return False
+
+    for project in featured:
+        if len(cube_projects) == 3:
+            break
+        append_cube_project(project)
+
+    return templates.TemplateResponse(request=request, name="landing.html", context={
+        "request": request,
+        "settings": site_settings,
+        "lang": selected_lang,
+        "cube_projects": cube_projects,
+    })
+
+@app.get("/home", response_class=HTMLResponse)
 async def home(
     request: Request, 
     db: Session = Depends(get_db), 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{ lang | default('pt') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ settings.get('site_name', 'Daniel Moura') }}</title>
+    <link rel="icon" type="image/png" href="{{ settings.get('logo_path', '/static/logo.png') }}">
+    <link rel="stylesheet" href="/static/css/style.css?v=20">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="landing-page">
+    <div class="landing-shell">
+        <div class="landing-lang-switcher">
+            {% set current_lang = lang | default('pt') %}
+            {% if current_lang == 'pt' %}
+                <a href="{{ request.url.path }}?lang=pt" onclick="document.cookie='language=pt; max-age=31536000; path=/; samesite=lax'" class="active">PT</a>
+                <span class="lang-divider">|</span>
+                <a href="{{ request.url.path }}?lang=en" onclick="document.cookie='language=en; max-age=31536000; path=/; samesite=lax'">EN</a>
+            {% else %}
+                <a href="{{ request.url.path }}?lang=pt" onclick="document.cookie='language=pt; max-age=31536000; path=/; samesite=lax'">PT</a>
+                <span class="lang-divider">|</span>
+                <a href="{{ request.url.path }}?lang=en" onclick="document.cookie='language=en; max-age=31536000; path=/; samesite=lax'" class="active">EN</a>
+            {% endif %}
+        </div>
+
+        <div class="landing-canvas-wrap" aria-hidden="true">
+            <canvas id="landingCubeCanvas" class="landing-canvas"></canvas>
+        </div>
+
+        <div class="landing-focus-controls" id="landingFocusControls" aria-hidden="true">
+            <button type="button" class="landing-focus-arrow landing-focus-arrow-left" id="landingFocusPrev" aria-label="Previous image">&#8249;</button>
+            <button type="button" class="landing-focus-arrow landing-focus-arrow-right" id="landingFocusNext" aria-label="Next image">&#8250;</button>
+        </div>
+
+        {% if cube_projects %}
+        <script id="cube-projects-data" type="application/json">{{ cube_projects | tojson }}</script>
+        {% endif %}
+
+        <main class="landing-main">
+            <p class="landing-label">{{ settings.get('site_name', 'Daniel Moura') }}</p>
+            <h1>{{ settings.get('site_name', 'Daniel Moura') }}</h1>
+            <a href="/home{% if lang %}?lang={{ lang }}{% endif %}" class="landing-button">{{ t('landing.learn_more', lang | default('pt')) }}</a>
+        </main>
+    </div>
+
+    <script type="module" src="/static/js/landing-cube.js"></script>
+</body>
+</html>

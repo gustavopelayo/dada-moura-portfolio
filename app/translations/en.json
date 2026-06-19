@@ -10,6 +10,9 @@
     "view_project": "View Project",
     "featured_work": "Featured Work"
   },
+  "landing": {
+    "learn_more": "Learn More"
+  },
   "about": {
     "title": "About",
     "about_me": "About Me"
